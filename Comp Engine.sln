@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcproj", "{A08B31EE-39BE-4EF0-8D9E-13CAA79163E9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Box2D", "Box2D\Box2D.vcproj", "{11F7D599-C507-4204-9C92-33807F04D603}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gwen", "Gwen\Gwen.vcproj", "{9E6D44D9-E1B4-4D6D-8919-6A1757ABA353}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A08B31EE-39BE-4EF0-8D9E-13CAA79163E9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A08B31EE-39BE-4EF0-8D9E-13CAA79163E9}.Debug|Win32.Build.0 = Debug|Win32
+		{A08B31EE-39BE-4EF0-8D9E-13CAA79163E9}.Release|Win32.ActiveCfg = Release|Win32
+		{A08B31EE-39BE-4EF0-8D9E-13CAA79163E9}.Release|Win32.Build.0 = Release|Win32
+		{11F7D599-C507-4204-9C92-33807F04D603}.Debug|Win32.ActiveCfg = Debug|Win32
+		{11F7D599-C507-4204-9C92-33807F04D603}.Debug|Win32.Build.0 = Debug|Win32
+		{11F7D599-C507-4204-9C92-33807F04D603}.Release|Win32.ActiveCfg = Release|Win32
+		{11F7D599-C507-4204-9C92-33807F04D603}.Release|Win32.Build.0 = Release|Win32
+		{9E6D44D9-E1B4-4D6D-8919-6A1757ABA353}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9E6D44D9-E1B4-4D6D-8919-6A1757ABA353}.Debug|Win32.Build.0 = Debug|Win32
+		{9E6D44D9-E1B4-4D6D-8919-6A1757ABA353}.Release|Win32.ActiveCfg = Release|Win32
+		{9E6D44D9-E1B4-4D6D-8919-6A1757ABA353}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
