@@ -36,7 +36,7 @@ CBaseEntity *CEntityRegister::CreateFromClassname(const char *classname)
 		{
 			m_pEnts[i] = entity;
 
-			entity->SetIndex(i, m_iUniqueIndex);
+			entity->SetIndex(i, m_iUniqueIndex++);
 
 			return entity;
 		}
@@ -87,6 +87,7 @@ void CEntityRegister::ThinkAll(void)
 		CBaseEntity *ent = m_pEnts[i];
 		if(ent != NULL)
 		{
+			ent->PreThink();
 			ent->Think();
 		}
 	}

@@ -224,6 +224,14 @@
 					RelativePath=".\CBaseEntity.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\CTestEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CTestWorld.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

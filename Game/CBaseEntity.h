@@ -36,13 +36,10 @@ class CEntityRegister;
 
 class CBaseEntity
 {
-protected:
-	friend class CEntityRegister;
-
+public:
 	CBaseEntity(void);
 	virtual ~CBaseEntity(void);
 
-public:
 	virtual void Initialise(void);
 	virtual void Think(void);
 	virtual void Draw(void);
@@ -76,6 +73,9 @@ public:
 	void SetColor(const Color &col);
 	const Color &GetColor(void) const;
 
+	void SetBounds(const Vector &bounds);
+	const Vector &GetBounds(void) const;
+
 	void AddEffect(EFFECTS effect);
 	void ClearEffects(void);
 	void RemoveEffect(EFFECTS effect);
@@ -89,6 +89,8 @@ private:
 	int m_iIndex;
 	int m_iUniqueIndex;
 	const char *m_pClassName;
+
+	Vector m_vBounds;
 
 	Vector m_vBasePosition;
 	Vector m_vBaseVelocity;
@@ -105,53 +107,16 @@ private:
 class CEntityHandle
 {
 public:
-	CEntityHandle(void) : m_pEntity(NULL), m_iIndex(-1), m_iUniqueIndex(-1)
-	{
-	};
+	CEntityHandle(void);
+	CEntityHandle(CBaseEntity *entity);
 
-	CEntityHandle(CBaseEntity *entity)
-	{
-		m_pEntity = entity;
-		entity->GetIndex(m_iIndex, m_iUniqueIndex);
-	};
-
-	inline bool IsValid(void) const
-	{
-		if(m_pEntity == NULL || m_iIndex == -1 || m_iUniqueIndex == -1)
-			return false;
-
-		return true;
-	};
-
-	inline CBaseEntity *operator->(void) const
-	{
-		return m_pEntity;
-	};
-
-	inline CBaseEntity *Get(void) const
-	{
-		return m_pEntity;
-	};
-
-	inline operator CBaseEntity *(void) const
-	{
-		return m_pEntity;
-	};
-
-	inline operator bool(void) const
-	{
-		return IsValid();
-	};
-
-	inline bool operator==(const CEntityHandle &other) const
-	{
-		return m_pEntity == other.m_pEntity && m_pEntity != NULL && m_iIndex != -1 && m_iUniqueIndex != -1;
-	};
-
-	inline bool operator==(const CBaseEntity *other) const
-	{
-		return m_pEntity == other && m_pEntity != NULL && m_iIndex != -1 && m_iUniqueIndex != -1;
-	};
+	inline bool IsValid(void) const;
+	inline CBaseEntity *operator->(void) const;
+	inline CBaseEntity *Get(void) const;
+	inline operator CBaseEntity *(void) const;
+	inline operator bool(void) const;
+	inline bool operator==(const CEntityHandle &other) const;
+	inline bool operator==(const CBaseEntity *other) const;
 
 private:
 	int m_iIndex;
