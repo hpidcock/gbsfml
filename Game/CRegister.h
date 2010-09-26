@@ -29,7 +29,7 @@ class CClassFactory
 public:
 	CClassFactory(const char *classname)
 	{
-		Register::Get().Register(classname, (void (*)(void))FactoryFunction);
+		Register::Get().Register(classname, (void *(*)(void))FactoryFunction);
 	};
 
 	static void *FactoryFunction(void)
@@ -46,7 +46,7 @@ class CRegister
 {
 	friend Register;
 public:
-	void Register(const char *classname, void (* factory)(void))
+	void Register(const char *classname, void *(* factory)(void))
 	{
 		std::string name = classname;
 		std::transform(name.begin(), name.end(), name.begin(), toupper);
@@ -59,7 +59,7 @@ public:
 		std::string name = classname;
 		std::transform(name.begin(), name.end(), name.begin(), toupper);
 
-		void (* factory)(void) = m_Factories[name];
+		void *(* factory)(void) = m_Factories[name];
 
 		assert(factory != NULL);
 
@@ -71,7 +71,7 @@ public:
 	};
 
 private:
-	std::map<std::string, void (*)(void)> m_Factories;
+	std::map<std::string, void *(*)(void)> m_Factories;
 };
 
 #endif // __CREGISTER_H__
