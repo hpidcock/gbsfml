@@ -26,6 +26,18 @@
 
 int main(void)
 {
+	char filename[MAX_PATH];
+	int size = GetModuleFileName(NULL, filename, MAX_PATH);
+	for(int i = size; i > 0; i--)
+	{
+		if(filename[i] == '\\')
+		{
+			filename[i] = 0x00;
+			break;
+		}
+	}
+	SetCurrentDirectory(filename);
+
 	CEngine::Get().Init();
 
 	CEngine::Get().Run();
