@@ -37,10 +37,11 @@ public:
 	void Cleanup(void);
 
 	CBaseEntity *CreateFromClassname(const char *classname);
-
 	void Destroy(CBaseEntity *entity, int index);
-	
 	bool IsValid(CBaseEntity *entity, int index, int uniqueIndex);
+
+	void ThinkAll(void);
+	void DrawAll(void);
 
 private:
 	int m_iUniqueIndex;
