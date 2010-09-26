@@ -73,7 +73,7 @@ void CAnimatedSprite::SetCurrentSequence(const char *name, bool restart)
 		}
 	}
 
-	assert(m_iCurrentSequence == -1);
+	assert(m_iCurrentSequence != -1);
 
 	if(restart)
 	{
@@ -88,7 +88,7 @@ void CAnimatedSprite::Render(sf::RenderTarget &target) const
 
 	const Sequence &seq = m_Sequences[m_iCurrentSequence];
 
-	int frame = seq.startFrame + Wrap((int)floorf((CUtil::Get().CurTime() - m_flStartTime) * (float)m_iFrameRate), (int)0, (int)seq.frameCount);
+	int frame = seq.startFrame + Wrap((int)floorf((CUtil::Get().CurTime() - m_flStartTime) * (float)m_iFrameRate), (int)0, (int)seq.frameCount - 1);
 	int y = (int)floorf(frame / m_iNumColumns);
 	int x = frame - (m_iNumColumns * y);
 
@@ -102,5 +102,5 @@ void CAnimatedSprite::Render(sf::RenderTarget &target) const
 	CAnimatedSprite *self = const_cast<CAnimatedSprite *>(this);
 	self->SetSubRect(rect);
 
-	Render(target);
+	sf::Sprite::Render(target);
 }

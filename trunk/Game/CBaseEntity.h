@@ -32,12 +32,17 @@ enum EFFECTS
 	EFFECT_MULTIPLY		= (1 << 3)
 };
 
+class CEntityRegister;
+
 class CBaseEntity
 {
-public:
+protected:
+	friend class CEntityRegister;
+
 	CBaseEntity(void);
 	virtual ~CBaseEntity(void);
 
+public:
 	virtual void Initialise(void);
 	virtual void Think(void);
 	virtual void Draw(void);

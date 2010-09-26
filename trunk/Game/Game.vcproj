@@ -201,6 +201,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\CEntityRegister.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\CParticles.cpp"
 					>
 				</File>

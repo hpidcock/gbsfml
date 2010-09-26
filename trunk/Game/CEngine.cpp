@@ -27,6 +27,9 @@
 #include "CSounds.h"
 #include "CResources.h"
 #include "CCamera.h"
+#include "CEntityRegister.h"
+
+#include "CAnimatedSprite.h"
 
 #include <Gwen/Renderers/OpenGL.h>
 #include <Gwen/Skins/TexturedBase.h>
@@ -39,6 +42,8 @@
 
 void CEngine::Cleanup(void)
 {
+	CEntityRegister::Get().Cleanup();
+
 	delete m_pPhysicsWorld;
 
 	delete m_pRenderWindow;
@@ -70,6 +75,8 @@ void CEngine::Init(void)
 	CCamera::Get().SetZoom(0.0f);
 
 	m_pPhysicsWorld = new b2World(Vector(0.0f, -0.5f), true);
+
+	CEntityRegister::Get().Init();
 }
 
 void CEngine::HandleEvent(sf::Event &e)
@@ -112,6 +119,11 @@ void CEngine::DrawGUI(void)
 
 void CEngine::Run(void)
 {
+	CAnimatedSprite *a = new CAnimatedSprite(*CResources::Get().GetTexture("test.png"));
+	a->SetAnimationParams(Vector(32, 32), 8, 4, 4);
+	a->CreateSequence("test", 0, 4);
+	a->SetCurrentSequence("test", true);
+
 	while(m_pRenderWindow->IsOpened())
 	{
 		CUtil::Get().UpdateTime(m_pRenderWindow->GetFrameTime());
@@ -136,6 +148,8 @@ void CEngine::Run(void)
 		v.Move(cameraOffset);
 		v.Zoom(cameraZoom);
 		m_pRenderWindow->SetView(v);
+
+		m_pRenderWindow->Draw(*a);
 
 		DrawParticles();
 		DrawGUI();

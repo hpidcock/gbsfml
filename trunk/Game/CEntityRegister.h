@@ -23,16 +23,28 @@
 #ifndef __CENTITYREGISTER_H__
 #define __CENTITYREGISTER_H__
 
-#define RegisterEntity(Class, Name)	\
-	CClassFactory<CEntityRegister, Class> Factory##Class ( Name );
+#define MAX_ENTS 2048
+
+#define RegisterEntity(Class)	\
+	CClassFactory<CEntityRegister, Class> Factory##Class ( #Class );
 
 class CBaseEntity;
 
 class CEntityRegister : public CSingleton<CEntityRegister>, public CRegister<CEntityRegister, CBaseEntity>
 {
 public:
+	void Init(void);
+	void Cleanup(void);
+
+	CBaseEntity *CreateFromClassname(const char *classname);
+
+	void Destroy(CBaseEntity *entity, int index);
+	
+	bool IsValid(CBaseEntity *entity, int index, int uniqueIndex);
 
 private:
+	int m_iUniqueIndex;
+	CBaseEntity *m_pEnts[MAX_ENTS];
 };
 
 #endif // __CENTITYREGISTER_H__
