@@ -59,8 +59,11 @@ void CEngine::Cleanup(void)
 
 void CEngine::Init(void)
 {
+	// Setup the renderer.
 	m_pRenderWindow = new sf::RenderWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Game Window", sf::Style::Close);
+	m_pRenderWindow->SetFramerateLimit(60);
 	
+	// Setup the GUI.
 	m_pGwenRenderer = new Gwen::Renderer::OpenGL(wglGetCurrentDC(), GetActiveWindow());
 	
 	Gwen::Skin::TexturedBase *skin = new Gwen::Skin::TexturedBase();
@@ -71,11 +74,14 @@ void CEngine::Init(void)
 	m_pCanvas = new Gwen::Controls::Canvas(m_pGwenSkin);
 	m_pCanvas->SetSize(SCREEN_WIDTH + 1, SCREEN_HEIGHT + 1);
 
+	// Set the default camera
 	CCamera::Get().SetPosition(Vector(0.0f, 0.0f));
 	CCamera::Get().SetZoom(0.0f);
 
-	m_pPhysicsWorld = new b2World(Vector(0.0f, -0.5f), true);
-
+	// Setup physics
+	m_pPhysicsWorld = new b2World(Vector(0.0f, 256.0f), true);
+	
+	// Setup the entity system.
 	CEntityRegister::Get().Init();
 }
 
@@ -105,8 +111,10 @@ void CEngine::DrawParticles(void)
 
 void CEngine::DrawGUI(void)
 {
+	// Clear only the depth so the gui is drawn ontop of the scene.
 	glClear(GL_DEPTH_BUFFER_BIT);
 
+	// Setup the view port.
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, -1.0, 0.0);
@@ -137,7 +145,8 @@ void CEngine::UpdateCamera(void)
 
 void CEngine::UpdatePhysics(void)
 {
-	m_pPhysicsWorld->Step(CUtil::Get().DeltaTime(), 10, 10);
+	m_pPhysicsWorld->Step(1.0f / 60.0f, 100, 100);
+	m_pPhysicsWorld->ClearForces();
 }
 
 void CEngine::UpdateEntities(void)
@@ -157,11 +166,18 @@ void CEngine::UpdateParticles(void)
 
 void CEngine::Run(void)
 {
-	CAnimatedSprite *a = new CAnimatedSprite(*CResources::Get().GetTexture("test.png"));
-	a->SetAnimationParams(Vector(32, 32), 8, 4, 4);
-	a->CreateSequence("test", 0, 4);
-	a->SetCurrentSequence("test", true);
-	
+	for(int i = 0; i < 32; i++)
+	{
+		CBaseEntity *ent = CEntityRegister::Get().CreateFromClassname("CTestEntity");
+		ent->Initialise();
+		ent->SetPos(Vector(128, 2 * i));
+		ent->SetAngle(i * 10);
+	}
+
+	CBaseEntity *ent2 = CEntityRegister::Get().CreateFromClassname("CTestWorld");
+	ent2->Initialise();
+	ent2->SetPos(Vector(0, 400));
+	ent2->SetAngle(20);
 
 	while(m_pRenderWindow->IsOpened())
 	{
@@ -180,8 +196,6 @@ void CEngine::Run(void)
 		UpdateCamera();
 
 		m_pRenderWindow->Clear();
-
-		m_pRenderWindow->Draw(*a);
 
 		DrawEntities();
 		DrawParticles();

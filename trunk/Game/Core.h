@@ -23,7 +23,7 @@
 // Windows
 #define WIN32_LEAN_AND_MEAN
 #undef UNICODE
-
+#define NOMINMAX
 #include <windows.h>
 #include <cassert>
 
@@ -56,3 +56,6 @@
 
 #include "CUtil.h"
 #include "CEngine.h"
+
+#include "CBaseEntity.h"
+#include "CEntityRegister.h"

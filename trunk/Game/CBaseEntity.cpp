@@ -23,10 +23,12 @@
 #include "Core.h"
 
 #include "CBaseEntity.h"
+#include "CEntityRegister.h"
 
 CBaseEntity::CBaseEntity(void) :
 	m_iIndex(-1),
 	m_pClassName("CBaseEntity"),
+	m_vBounds(0, 0),
 	m_vBasePosition(0, 0),
 	m_vBaseVelocity(0, 0),
 	m_vBaseAngle(0),
@@ -61,11 +63,25 @@ void CBaseEntity::Think(void)
 
 void CBaseEntity::Draw(void)
 {
+	sf::RenderWindow &window = CEngine::Get().GetRenderWindow();
+
+	Vector objectTopLeft = GetPos() - GetBounds() / 2;
+	Vector objectBottomRight = GetPos() + GetBounds() / 2;
+	Vector screenTopLeft = window.ConvertCoords(0, 0);
+	Vector screenBottomRight = window.ConvertCoords(window.GetWidth(), window.GetHeight());
+
+	sf::IntRect object(objectTopLeft.x, objectTopLeft.y, objectBottomRight.x, objectBottomRight.y);
+	sf::IntRect screen(screenTopLeft.x, screenTopLeft.y, screenBottomRight.x, screenBottomRight.y);
+
+	if(!object.Intersects(screen))
+		return;
+
 	if(IsDrawable())
 	{
 		m_pDrawableObject->SetPosition(m_vBasePosition);
 		m_pDrawableObject->SetRotation(m_vBaseAngle);
 		m_pDrawableObject->SetColor(m_cDiffuseColour);
+		m_pDrawableObject->SetCenter(GetBounds() / 2);
 		
 		if(IsEffectSet(EFFECT_ADD))
 		{
@@ -80,38 +96,36 @@ void CBaseEntity::Draw(void)
 			m_pDrawableObject->SetBlendMode(sf::Blend::Alpha);
 		}
 
-		sf::RenderWindow &window = CEngine::Get().GetRenderWindow();
-
 		if(IsEffectSet(EFFECT_BLUR))
 		{
 			Color diffuse = m_cDiffuseColour;
-			diffuse.a = 255 / 32;
+			diffuse.a = 255 / 10;
 			m_pDrawableObject->SetColor(diffuse);
 
-			for(int x = -8; x <= 8; x++)
+			for(int x = -2; x <= 2; x++)
 			{
 				m_pDrawableObject->SetPosition(m_vBasePosition + Vector(x, 0));
 				window.Draw(*m_pDrawableObject);
 			}
 
-			for(int y = -8; y <= 8; y++)
+			for(int y = -2; y <= 2; y++)
 			{
 				m_pDrawableObject->SetPosition(m_vBasePosition + Vector(0, y));
 				window.Draw(*m_pDrawableObject);
 			}
 		}
-		else if(IsEffectSet(EFFECT_MOTIONBLUR) && m_vBaseVelocity.Length() > 32.0f)
+		else if(IsEffectSet(EFFECT_MOTIONBLUR) && m_vBaseVelocity.Length() > 0)
 		{
 			Vector direction = m_vBaseVelocity.Normalise();
-			Vector start = m_vBasePosition + (m_vBaseVelocity.Invert() * 0.25f);
-			float incr = (m_vBaseVelocity * 0.25f).Length() / 32.0f;
+			Vector start = m_vBasePosition + (m_vBaseVelocity.Invert() * 0.1f);
+			float incr = (m_vBaseVelocity * 0.1f).Length() / 8.0f;
 
-			for(int i = 0; i <= 32; i++)
+			for(int i = 0; i <= 8; i++)
 			{
 				m_pDrawableObject->SetPosition(start + direction * incr * i);
 
 				Color diffuse = m_cDiffuseColour;
-				diffuse.a = (logf((float)i / 32.0f) + 1.0f) * 255;
+				diffuse.a = ((float)(i*i) / (float)(8*8)) * 200;
 				m_pDrawableObject->SetColor(diffuse);
 
 				window.Draw(*m_pDrawableObject);
@@ -131,8 +145,8 @@ void CBaseEntity::PreThink(void)
 		const b2Transform &t = m_pPhysicsObject->GetTransform();
 
 		m_vBasePosition = t.position;
-		m_vBaseAngle = (t.GetAngle() / 3.14159) * 180;
-
+		m_vBaseAngle = -(m_pPhysicsObject->GetAngle() / 3.14159) * 180;
+		
 		m_vBaseVelocity = m_pPhysicsObject->GetLinearVelocity();
 	}
 }
@@ -151,9 +165,10 @@ void CBaseEntity::CreatePhysicsBody(bool dynamic)
 	b2BodyDef def;
 	def.type = dynamic ? b2_dynamicBody : b2_staticBody;
 	def.allowSleep = true;
+	def.fixedRotation = !dynamic;
+	def.userData = static_cast<void *>(this);
 
 	m_pPhysicsObject = world->CreateBody(&def);
-	m_pPhysicsObject->SetUserData(static_cast<void *>(this));
 }
 
 void CBaseEntity::DestroyPhysicsBody(void)
@@ -261,6 +276,16 @@ const Color &CBaseEntity::GetColor(void) const
 	return m_cDiffuseColour;
 }
 
+void CBaseEntity::SetBounds(const Vector &bounds)
+{
+	m_vBounds = bounds;
+}
+
+const Vector &CBaseEntity::GetBounds(void) const
+{
+	return m_vBounds;
+}
+
 void CBaseEntity::SetPhysicsBody(b2Body *obj)
 {
 	m_pPhysicsObject = obj;
@@ -290,3 +315,53 @@ bool CBaseEntity::IsEffectSet(EFFECTS effect)
 {
 	return (m_iEffectFlags & effect) != 0;
 }
+
+// CEntityHandle
+
+CEntityHandle::CEntityHandle(void) : m_pEntity(NULL), m_iIndex(-1), m_iUniqueIndex(-1)
+{
+};
+
+CEntityHandle::CEntityHandle(CBaseEntity *entity)
+{
+	m_pEntity = entity;
+	entity->GetIndex(m_iIndex, m_iUniqueIndex);
+};
+
+inline bool CEntityHandle::IsValid(void) const
+{
+	if(m_pEntity == NULL || m_iIndex == -1 || m_iUniqueIndex == -1)
+		return false;
+
+	return CEntityRegister::Get().IsValid(m_pEntity, m_iIndex, m_iUniqueIndex);
+};
+
+inline CBaseEntity *CEntityHandle::operator->(void) const
+{
+	return m_pEntity;
+};
+
+inline CBaseEntity *CEntityHandle::Get(void) const
+{
+	return m_pEntity;
+};
+
+inline CEntityHandle::operator CBaseEntity *(void) const
+{
+	return m_pEntity;
+};
+
+inline CEntityHandle::operator bool(void) const
+{
+	return IsValid();
+};
+
+inline bool CEntityHandle::operator==(const CEntityHandle &other) const
+{
+	return m_pEntity == other.m_pEntity && m_pEntity != NULL && m_iIndex != -1 && m_iUniqueIndex != -1;
+};
+
+inline bool CEntityHandle::operator==(const CBaseEntity *other) const
+{
+	return m_pEntity == other && m_pEntity != NULL && m_iIndex != -1 && m_iUniqueIndex != -1;
+};
