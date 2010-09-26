@@ -43,11 +43,20 @@ public:
 protected:
 	void DrawParticles(void);
 	void DrawGUI(void);
+	void DrawEntities(void);
+
+	void UpdateCamera(void);
+	void UpdatePhysics(void);
+	void UpdateEntities(void);
+	void UpdateSounds(void);
+	void UpdateParticles(void);
 
 	void HandleEvent(sf::Event &e);
 
 private:
 	sf::RenderWindow *m_pRenderWindow;
+
+	sf::View m_View;
 
 	Gwen::Renderer::Base *m_pGwenRenderer;
 	Gwen::Skin::Base *m_pGwenSkin;

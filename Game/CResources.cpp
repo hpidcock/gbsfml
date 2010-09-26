@@ -59,6 +59,7 @@ sf::Image *CResources::GetTexture(const char *fileName)
 	ret = new sf::Image();
 	if(!ret->LoadFromFile(fileName))
 	{
+		MessageBoxA(NULL, fileName, "TEXTURE MISSING", MB_ICONERROR);
 		delete ret;
 		return NULL;
 	}
@@ -78,6 +79,7 @@ sf::SoundBuffer *CResources::GetSound(const char *fileName)
 	ret = new sf::SoundBuffer();
 	if(!ret->LoadFromFile(fileName))
 	{
+		MessageBoxA(NULL, fileName, "SOUND MISSING", MB_ICONERROR);
 		delete ret;
 		return NULL;
 	}

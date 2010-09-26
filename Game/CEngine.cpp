@@ -117,12 +117,51 @@ void CEngine::DrawGUI(void)
 	m_pCanvas->RenderCanvas();
 }
 
+void CEngine::DrawEntities(void)
+{
+	CEntityRegister::Get().DrawAll();
+}
+
+void CEngine::UpdateCamera(void)
+{
+	// Get current camera translations.
+	Vector cameraOffset;
+	float cameraZoom;
+	CCamera::Get().GetTranslations(cameraOffset, cameraZoom);
+
+	m_View = sf::View(sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+	m_View.Move(cameraOffset);
+	m_View.Zoom(cameraZoom);
+	m_pRenderWindow->SetView(m_View);
+}
+
+void CEngine::UpdatePhysics(void)
+{
+	m_pPhysicsWorld->Step(CUtil::Get().DeltaTime(), 10, 10);
+}
+
+void CEngine::UpdateEntities(void)
+{
+	CEntityRegister::Get().ThinkAll();
+}
+
+void CEngine::UpdateSounds(void)
+{
+	CSounds::Get().Think();
+}
+
+void CEngine::UpdateParticles(void)
+{
+	CParticles::Get().Think();
+}
+
 void CEngine::Run(void)
 {
 	CAnimatedSprite *a = new CAnimatedSprite(*CResources::Get().GetTexture("test.png"));
 	a->SetAnimationParams(Vector(32, 32), 8, 4, 4);
 	a->CreateSequence("test", 0, 4);
 	a->SetCurrentSequence("test", true);
+	
 
 	while(m_pRenderWindow->IsOpened())
 	{
@@ -133,24 +172,18 @@ void CEngine::Run(void)
 		{
 			HandleEvent(e);
 		}
-
-		// Update Physics
-		m_pPhysicsWorld->Step(CUtil::Get().DeltaTime(), 10, 10);
+		
+		UpdatePhysics();
+		UpdateEntities();
+		UpdateSounds();
+		
+		UpdateCamera();
 
 		m_pRenderWindow->Clear();
 
-		// Get current camera translations.
-		Vector cameraOffset;
-		float cameraZoom;
-		CCamera::Get().GetTranslations(cameraOffset, cameraZoom);
-
-		sf::View v = m_pRenderWindow->GetDefaultView();
-		v.Move(cameraOffset);
-		v.Zoom(cameraZoom);
-		m_pRenderWindow->SetView(v);
-
 		m_pRenderWindow->Draw(*a);
 
+		DrawEntities();
 		DrawParticles();
 		DrawGUI();
 
