@@ -20,49 +20,47 @@
 //	THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "CRayTraceCallback.h"
-#include "CCollisionCallback.h"
+#ifndef __CRAYTRACECALLBACK_H__
+#define __CRAYTRACECALLBACK_H__
 
-#ifndef __CENGINE_H__
-#define __CENGINE_H__
-
-class CEngine : public CSingleton<CEngine>
+struct TraceResult
 {
-public:
-	void Cleanup(void);
-	void Init(void);
-	void Run(void);
+	TraceResult()
+	{
+		entity = NULL;
+		fraction = -1.0f;
+	};
 
-	TraceResult RayTrace(Vector start, Vector end);
-
-	sf::RenderWindow &GetRenderWindow(void);
-	b2World *GetPhysicsWorld(void);
-
-protected:
-	void DrawParticles(void);
-	void DrawGUI(void);
-	void DrawEntities(void);
-
-	void UpdateCamera(void);
-	void UpdatePhysics(void);
-	void UpdateEntities(void);
-	void UpdateSounds(void);
-	void UpdateParticles(void);
-
-	void HandleEvent(sf::Event &e);
-
-private:
-	sf::RenderWindow *m_pRenderWindow;
-
-	sf::View m_View;
-
-	Gwen::Renderer::Base *m_pGwenRenderer;
-	Gwen::Skin::Base *m_pGwenSkin;
-	Gwen::Controls::Canvas *m_pCanvas;
-
-	b2World *m_pPhysicsWorld;
-
-	CCollisionCallback m_CollisionCallbacks;
+	CBaseEntity *entity;
+	Vector pos;
+	Vector normal;
+	float fraction;
 };
 
-#endif // __CENGINE_H__
+class CRayTraceCallback : public b2RayCastCallback
+{
+public:
+	CRayTraceCallback(void)
+	{
+	};
+
+	virtual float32 ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float32 fraction)
+	{
+		m_Result.entity = static_cast<CBaseEntity *>(fixture->GetBody()->GetUserData());
+		m_Result.pos = point;
+		m_Result.normal = normal;
+		m_Result.fraction = fraction;
+
+		return fraction;
+	};
+
+	const TraceResult &GetResult(void)
+	{
+		return m_Result;
+	};
+
+private:
+	TraceResult m_Result;
+};
+
+#endif // __CRAYTRACECALLBACK_H__

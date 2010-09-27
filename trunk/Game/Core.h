@@ -55,7 +55,8 @@
 #include "CRegister.h"
 
 #include "CUtil.h"
-#include "CEngine.h"
 
 #include "CBaseEntity.h"
 #include "CEntityRegister.h"
+
+#include "CEngine.h"

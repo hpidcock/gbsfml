@@ -33,6 +33,7 @@ enum EFFECTS
 };
 
 class CEntityRegister;
+class CEntityHandle;
 
 class CBaseEntity
 {
@@ -43,6 +44,7 @@ public:
 	virtual void Initialise(void);
 	virtual void Think(void);
 	virtual void Draw(void);
+	virtual void OnCollide(CEntityHandle &other);
 
 	void PreThink(void);
 	bool IsPhysical(void) const;
@@ -110,13 +112,13 @@ public:
 	CEntityHandle(void);
 	CEntityHandle(CBaseEntity *entity);
 
-	inline bool IsValid(void) const;
-	inline CBaseEntity *operator->(void) const;
-	inline CBaseEntity *Get(void) const;
-	inline operator CBaseEntity *(void) const;
-	inline operator bool(void) const;
-	inline bool operator==(const CEntityHandle &other) const;
-	inline bool operator==(const CBaseEntity *other) const;
+	bool IsValid(void) const;
+	CBaseEntity *operator->(void) const;
+	CBaseEntity *Get(void) const;
+	operator CBaseEntity *(void) const;
+	operator bool(void) const;
+	bool operator==(const CEntityHandle &other) const;
+	bool operator==(const CBaseEntity *other) const;
 
 private:
 	int m_iIndex;
