@@ -20,49 +20,51 @@
 //	THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "CRayTraceCallback.h"
-#include "CCollisionCallback.h"
+#ifndef __CCOLLISIONCALLBACK_H__
+#define __CCOLLISIONCALLBACK_H__
 
-#ifndef __CENGINE_H__
-#define __CENGINE_H__
-
-class CEngine : public CSingleton<CEngine>
+struct CollideEvent
 {
-public:
-	void Cleanup(void);
-	void Init(void);
-	void Run(void);
-
-	TraceResult RayTrace(Vector start, Vector end);
-
-	sf::RenderWindow &GetRenderWindow(void);
-	b2World *GetPhysicsWorld(void);
-
-protected:
-	void DrawParticles(void);
-	void DrawGUI(void);
-	void DrawEntities(void);
-
-	void UpdateCamera(void);
-	void UpdatePhysics(void);
-	void UpdateEntities(void);
-	void UpdateSounds(void);
-	void UpdateParticles(void);
-
-	void HandleEvent(sf::Event &e);
-
-private:
-	sf::RenderWindow *m_pRenderWindow;
-
-	sf::View m_View;
-
-	Gwen::Renderer::Base *m_pGwenRenderer;
-	Gwen::Skin::Base *m_pGwenSkin;
-	Gwen::Controls::Canvas *m_pCanvas;
-
-	b2World *m_pPhysicsWorld;
-
-	CCollisionCallback m_CollisionCallbacks;
+	CEntityHandle a;
+	CEntityHandle b;
 };
 
-#endif // __CENGINE_H__
+class CCollisionCallback : public b2ContactListener
+{
+public:
+	CCollisionCallback(void)
+	{
+		m_Collisions = &m_BufferA;
+	};
+
+	virtual void BeginContact(b2Contact *contact)
+	{
+		if(!contact->IsTouching())
+			return;
+
+		if(!contact->IsEnabled())
+			return;
+
+		CollideEvent e;
+		e.a = static_cast<CBaseEntity *>(contact->GetFixtureA()->GetBody()->GetUserData());
+		e.b = static_cast<CBaseEntity *>(contact->GetFixtureB()->GetBody()->GetUserData());
+		m_Collisions->push_back(e);
+	};
+
+	std::vector<CollideEvent> *PopCollisions(void)
+	{
+		std::vector<CollideEvent> *ret = m_Collisions;
+
+		m_Collisions = (m_Collisions == &m_BufferA) ? &m_BufferB : &m_BufferA;
+
+		return ret;
+	};
+
+private:
+	std::vector<CollideEvent> *m_Collisions;
+
+	std::vector<CollideEvent> m_BufferA;
+	std::vector<CollideEvent> m_BufferB;
+};
+
+#endif // __CCOLLISIONCALLBACK_H__

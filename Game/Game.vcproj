@@ -319,6 +319,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Physics"
+				>
+				<File
+					RelativePath=".\CCollisionCallback.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CRayTraceCallback.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Tiny XML"

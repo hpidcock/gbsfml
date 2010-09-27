@@ -138,6 +138,10 @@ void CBaseEntity::Draw(void)
 	}
 }
 
+void CBaseEntity::OnCollide(CEntityHandle &other)
+{
+}
+
 void CBaseEntity::PreThink(void)
 {
 	if(IsPhysical())
@@ -316,7 +320,9 @@ bool CBaseEntity::IsEffectSet(EFFECTS effect)
 	return (m_iEffectFlags & effect) != 0;
 }
 
+///////////////////////////////////////////////
 // CEntityHandle
+///////////////////////////////////////////////
 
 CEntityHandle::CEntityHandle(void) : m_pEntity(NULL), m_iIndex(-1), m_iUniqueIndex(-1)
 {
@@ -328,7 +334,7 @@ CEntityHandle::CEntityHandle(CBaseEntity *entity)
 	entity->GetIndex(m_iIndex, m_iUniqueIndex);
 };
 
-inline bool CEntityHandle::IsValid(void) const
+bool CEntityHandle::IsValid(void) const
 {
 	if(m_pEntity == NULL || m_iIndex == -1 || m_iUniqueIndex == -1)
 		return false;
@@ -336,32 +342,32 @@ inline bool CEntityHandle::IsValid(void) const
 	return CEntityRegister::Get().IsValid(m_pEntity, m_iIndex, m_iUniqueIndex);
 };
 
-inline CBaseEntity *CEntityHandle::operator->(void) const
+CBaseEntity *CEntityHandle::operator->(void) const
 {
 	return m_pEntity;
 };
 
-inline CBaseEntity *CEntityHandle::Get(void) const
+CBaseEntity *CEntityHandle::Get(void) const
 {
 	return m_pEntity;
 };
 
-inline CEntityHandle::operator CBaseEntity *(void) const
+CEntityHandle::operator CBaseEntity *(void) const
 {
 	return m_pEntity;
 };
 
-inline CEntityHandle::operator bool(void) const
+CEntityHandle::operator bool(void) const
 {
 	return IsValid();
 };
 
-inline bool CEntityHandle::operator==(const CEntityHandle &other) const
+bool CEntityHandle::operator==(const CEntityHandle &other) const
 {
 	return m_pEntity == other.m_pEntity && m_pEntity != NULL && m_iIndex != -1 && m_iUniqueIndex != -1;
 };
 
-inline bool CEntityHandle::operator==(const CBaseEntity *other) const
+bool CEntityHandle::operator==(const CBaseEntity *other) const
 {
 	return m_pEntity == other && m_pEntity != NULL && m_iIndex != -1 && m_iUniqueIndex != -1;
 };

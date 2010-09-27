@@ -80,6 +80,7 @@ void CEngine::Init(void)
 
 	// Setup physics
 	m_pPhysicsWorld = new b2World(Vector(0.0f, 256.0f), true);
+	m_pPhysicsWorld->SetContactListener(&m_CollisionCallbacks);
 	
 	// Setup the entity system.
 	CEntityRegister::Get().Init();
@@ -147,6 +148,24 @@ void CEngine::UpdatePhysics(void)
 {
 	m_pPhysicsWorld->Step(1.0f / 60.0f, 100, 100);
 	m_pPhysicsWorld->ClearForces();
+
+	std::vector<CollideEvent> *callbacks = m_CollisionCallbacks.PopCollisions();
+
+	std::vector<CollideEvent>::iterator end = callbacks->end();
+	for(std::vector<CollideEvent>::iterator i = callbacks->begin(); i != end; ++i)
+	{
+		CollideEvent &collision = (*i);
+
+		if(collision.a.IsValid())
+		{
+			collision.a->OnCollide(collision.b);
+		}
+
+		if(collision.b.IsValid())
+		{
+			collision.b->OnCollide(collision.a);
+		}
+	}
 }
 
 void CEngine::UpdateEntities(void)
@@ -203,4 +222,23 @@ void CEngine::Run(void)
 
 		m_pRenderWindow->Display();
 	}
+}
+
+TraceResult CEngine::RayTrace(Vector start, Vector end)
+{
+	CRayTraceCallback callback;
+
+	m_pPhysicsWorld->RayCast(&callback, start, end);
+
+	return callback.GetResult();
+}
+
+sf::RenderWindow &CEngine::GetRenderWindow(void)
+{
+	return *m_pRenderWindow;
+}
+
+b2World *CEngine::GetPhysicsWorld(void)
+{
+	return m_pPhysicsWorld;
 }
