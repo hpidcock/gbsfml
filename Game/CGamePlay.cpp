@@ -44,7 +44,7 @@ public:
 
 	virtual void Open(IBaseGameState *previous, const CKeyValues &keyValues)
 	{
-		for(int i = 0; i < 32; i++)
+		for(int i = 0; i < 16; i++)
 		{
 			CBaseEntity *ent = CEntityRegister::Get().CreateFromClassname("CTestEntity");
 			ent->Initialise();
@@ -72,7 +72,7 @@ public:
 
 	virtual void Think(void)
 	{
-		CCamera::Get().SetPosition(Vector(sin(CUtil::Get().CurTime()/5.0f) * 512, 0));
+		CCamera::Get().SetPosition(Vector(0, 0));
 	};
 
 	virtual void PostThink(void)
@@ -116,6 +116,13 @@ public:
 
 	virtual void OnKeyEvent(const sf::Event &e)
 	{
+		if(e.Key.Code == sf::Key::Space)
+		{
+			CBaseEntity *ent = CEntityRegister::Get().CreateFromClassname("CTestEntity");
+			ent->Initialise();
+			ent->SetPos(Vector(128, 32));
+			ent->SetAngle(10);
+		}
 	};
 
 	virtual void OnMouseEvent(const sf::Event &e)

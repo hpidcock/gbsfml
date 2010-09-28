@@ -214,7 +214,7 @@ void CEngine::UpdateCamera(void)
 
 void CEngine::UpdatePhysics(void)
 {
-	m_pPhysicsWorld->Step(1.0f / 60.0f, 100, 100);
+	m_pPhysicsWorld->Step(1.0f / 60.0f, 10, 100);
 	m_pPhysicsWorld->ClearForces();
 
 	std::vector<CollideEvent> *callbacks = m_CollisionCallbacks.PopCollisions();
