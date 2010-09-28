@@ -192,16 +192,16 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CCamera.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Game.cpp"
 				>
 			</File>
 			<Filter
 				Name="Singleton Systems"
 				>
-				<File
-					RelativePath=".\CCamera.cpp"
-					>
-				</File>
 				<File
 					RelativePath=".\CEngine.cpp"
 					>
@@ -255,6 +255,10 @@
 			>
 			<File
 				RelativePath=".\CAnimatedSprite.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CCamera.h"
 				>
 			</File>
 			<Filter
@@ -312,10 +316,6 @@
 			<Filter
 				Name="Singleton Systems"
 				>
-				<File
-					RelativePath=".\CCamera.h"
-					>
-				</File>
 				<File
 					RelativePath=".\CEngine.h"
 					>
