@@ -59,6 +59,7 @@ CBaseEntity *CEntityRegister::CreateFromClassname(const char *classname)
 			m_pEnts[i] = entity;
 
 			entity->SetIndex(i, m_iUniqueIndex++);
+			entity->SetClassname(classname);
 
 			return entity;
 		}

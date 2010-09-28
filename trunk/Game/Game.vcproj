@@ -199,6 +199,10 @@
 				Name="Singleton Systems"
 				>
 				<File
+					RelativePath=".\CCamera.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\CEngine.cpp"
 					>
 				</File>

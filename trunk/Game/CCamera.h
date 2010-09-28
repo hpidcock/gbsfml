@@ -26,31 +26,24 @@
 class CCamera : public CSingleton<CCamera>
 {
 public:
-	void Reset(void)
-	{
-		m_vPosition = Vector(0, 0);
-		m_flZoom = 1.0f;
-	};
+	void Reset(void);
+	void SetPosition(Vector &position);
+	void SetZoom(float zoom);
 
-	void SetPosition(Vector &position)
-	{
-		m_vPosition = position;
-	};
+	void Think(void);
+	void GetTranslations(Vector &outPosition, float &outZoom);
 
-	void SetZoom(float zoom)
-	{
-		m_flZoom = zoom;
-	};
-
-	void GetTranslations(Vector &outPosition, float &outZoom)
-	{
-		outPosition = m_vPosition;
-		outZoom = m_flZoom;
-	};
+	void SetFollowEntity(const CEntityHandle &follow);
+	const CEntityHandle &GetFollowEntity(void);
 
 private:
 	Vector m_vPosition;
 	float m_flZoom;
+
+	Vector m_vLastPosition;
+	float m_flLastZoom;
+
+	CEntityHandle m_FollowEntity;
 };
 
 #endif // __CCAMERA_H__

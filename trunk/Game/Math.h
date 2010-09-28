@@ -27,6 +27,18 @@
 #define __MATH_H__
 
 template<typename T>
+inline T Min(T a, T b)
+{
+	return a < b ? a : b;
+}
+
+template<typename T>
+inline T Max(T a, T b)
+{
+	return a > b ? a : b;
+}
+
+template<typename T>
 inline T Wrap(T x, T min, T max)
 {
 	return min + ((x - min) % (max - min + (T)1));

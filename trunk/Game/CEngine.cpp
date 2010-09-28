@@ -37,9 +37,6 @@
 #include <Gwen/Controls/WindowControl.h>
 #include <Gwen/Controls/ProgressBar.h>
 
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
-
 void CEngine::Cleanup(void)
 {
 	CEntityRegister::Get().Cleanup();
@@ -201,6 +198,8 @@ void CEngine::DrawEntities(void)
 
 void CEngine::UpdateCamera(void)
 {
+	CCamera::Get().Think();
+
 	// Get current camera translations.
 	Vector cameraOffset;
 	float cameraZoom;
