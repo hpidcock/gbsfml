@@ -20,51 +20,19 @@
 //	THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __CRAYTRACECALLBACK_H__
-#define __CRAYTRACECALLBACK_H__
+#ifndef __CGAMESTATEREGISTER_H__
+#define __CGAMESTATEREGISTER_H__
 
-struct TraceResult
-{
-	TraceResult()
-	{
-		entity = NULL;
-		fraction = -1.0f;
-	};
+#define RegisterGameState(Class)	\
+	CClassFactory<CGameStateRegister, Class> Factory##Class ( #Class );
 
-	CBaseEntity *entity;
-	Vector pos;
-	Vector normal;
-	float fraction;
-};
+class IBaseGameState;
 
-class CRayTraceCallback : public b2RayCastCallback
+class CGameStateRegister : public CSingleton<CGameStateRegister>, public CRegister<CGameStateRegister, IBaseGameState>
 {
 public:
-	CRayTraceCallback(CBaseEntity *filter) : m_pFilter(filter)
-	{
-	};
-
-	virtual float32 ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float32 fraction)
-	{
-		if(m_pFilter ==  static_cast<CBaseEntity *>(fixture->GetBody()->GetUserData()))
-			return -1.0f;
-
-		m_Result.entity = static_cast<CBaseEntity *>(fixture->GetBody()->GetUserData());
-		m_Result.pos = point;
-		m_Result.normal = normal;
-		m_Result.fraction = fraction;
-
-		return fraction;
-	};
-
-	const TraceResult &GetResult(void)
-	{
-		return m_Result;
-	};
 
 private:
-	CBaseEntity *m_pFilter;
-	TraceResult m_Result;
 };
 
-#endif // __CRAYTRACECALLBACK_H__
+#endif // __CGAMESTATEREGISTER_H__

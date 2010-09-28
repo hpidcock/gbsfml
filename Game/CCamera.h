@@ -26,6 +26,12 @@
 class CCamera : public CSingleton<CCamera>
 {
 public:
+	void Reset(void)
+	{
+		m_vPosition = Vector(0, 0);
+		m_flZoom = 1.0f;
+	};
+
 	void SetPosition(Vector &position)
 	{
 		m_vPosition = position;

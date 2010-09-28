@@ -59,4 +59,8 @@
 #include "CBaseEntity.h"
 #include "CEntityRegister.h"
 
+#include "CKeyValues.h"
+#include "CGameStateRegister.h"
+#include "IBaseGameState.h"
+
 #include "CEngine.h"

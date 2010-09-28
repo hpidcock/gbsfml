@@ -80,6 +80,60 @@ void CEntityRegister::Destroy(CBaseEntity *entity, int index)
 	assert(false);
 }
 
+std::vector<CEntityHandle> CEntityRegister::FindByClassName(const char *classname)
+{
+	std::vector<CEntityHandle> result;
+
+	for(int i = 0; i < MAX_ENTS; i++)
+	{
+		if(m_pEnts[i] != NULL)
+		{
+			if(_strcmpi(classname, m_pEnts[i]->GetClassname()) == 0)
+			{
+				result.push_back(m_pEnts[i]);
+			}
+		}
+	}
+
+	return result;
+}
+
+std::vector<CEntityHandle> CEntityRegister::FindInCircle(const Vector &pos, float radius)
+{
+	std::vector<CEntityHandle> result;
+
+	for(int i = 0; i < MAX_ENTS; i++)
+	{
+		if(m_pEnts[i] != NULL)
+		{
+			if(pos.Distance(m_pEnts[i]->GetPos()) <= radius)
+			{
+				result.push_back(m_pEnts[i]);
+			}
+		}
+	}
+
+	return result;
+}
+std::vector<CEntityHandle> CEntityRegister::FindInSquare(const Vector &min, const Vector &max)
+{
+	std::vector<CEntityHandle> result;
+
+	for(int i = 0; i < MAX_ENTS; i++)
+	{
+		if(m_pEnts[i] != NULL)
+		{
+			const Vector &pos = m_pEnts[i]->GetPos();
+			if(pos >= min && pos <= max)
+			{
+				result.push_back(m_pEnts[i]);
+			}
+		}
+	}
+
+	return result;
+}
+
 void CEntityRegister::ThinkAll(void)
 {
 	for(int i = 0; i < MAX_ENTS; i++)

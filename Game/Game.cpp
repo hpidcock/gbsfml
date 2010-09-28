@@ -40,6 +40,9 @@ int main(void)
 
 	CEngine::Get().Init();
 
+	CKeyValues kv;
+	CEngine::Get().ChangeState("CGamePlay", kv);
+
 	CEngine::Get().Run();
 
 	CEngine::Get().Cleanup();

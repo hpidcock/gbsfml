@@ -70,6 +70,19 @@ public:
 		return base;
 	};
 
+	std::vector<std::string> GetNames(void)
+	{
+		std::vector<std::string> ret;
+
+		std::map<std::string, void *(*)(void)>::iterator end = m_Factories.end();
+		for(std::map<std::string, void *(*)(void)>::iterator i = m_Factories.begin(); i != end; ++i)
+		{
+			ret.push_back((*i).first);
+		}
+
+		return ret;
+	};
+
 private:
 	std::map<std::string, void *(*)(void)> m_Factories;
 };
