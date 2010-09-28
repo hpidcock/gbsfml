@@ -65,8 +65,13 @@ void CBaseEntity::Draw(void)
 {
 	sf::RenderWindow &window = CEngine::Get().GetRenderWindow();
 
-	Vector objectTopLeft = GetPos() - GetBounds() / 2;
-	Vector objectBottomRight = GetPos() + GetBounds() / 2;
+	Vector worldPos = GetPos();
+	Vector maxBounds = GetBounds();
+	maxBounds = Vector(Max(maxBounds.x, maxBounds.y),
+						Max(maxBounds.x, maxBounds.y));
+
+	Vector objectTopLeft = worldPos - maxBounds / 2;
+	Vector objectBottomRight = worldPos + maxBounds / 2;
 	Vector screenTopLeft = window.ConvertCoords(0, 0);
 	Vector screenBottomRight = window.ConvertCoords(window.GetWidth(), window.GetHeight());
 
@@ -114,18 +119,19 @@ void CBaseEntity::Draw(void)
 				window.Draw(*m_pDrawableObject);
 			}
 		}
-		else if(IsEffectSet(EFFECT_MOTIONBLUR) && m_vBaseVelocity.Length() > 0)
+		else if(IsEffectSet(EFFECT_MOTIONBLUR) && m_vBaseVelocity.Length() > 32)
 		{
 			Vector direction = m_vBaseVelocity.Normalise();
-			Vector start = m_vBasePosition + (m_vBaseVelocity.Invert() * 0.1f);
-			float incr = (m_vBaseVelocity * 0.1f).Length() / 8.0f;
+			Vector start = m_vBasePosition + (m_vBaseVelocity.Invert() * 0.05f);
+			int count = Clamp((int)(m_vBaseVelocity.Length() / 32), 0, 32);
+			float incr = (m_vBaseVelocity * 0.05f).Length() / count;
 
-			for(int i = 0; i <= 8; i++)
+			for(int i = 0; i <= count; i++)
 			{
 				m_pDrawableObject->SetPosition(start + direction * incr * i);
 
 				Color diffuse = m_cDiffuseColour;
-				diffuse.a = ((float)(i*i) / (float)(8*8)) * 200;
+				diffuse.a = ((float)(i*i) / (float)(count*count)) * 255;
 				m_pDrawableObject->SetColor(diffuse);
 
 				window.Draw(*m_pDrawableObject);

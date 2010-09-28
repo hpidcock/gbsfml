@@ -122,6 +122,8 @@ public:
 			ent->Initialise();
 			ent->SetPos(Vector(128, 32));
 			ent->SetAngle(10);
+			ent->AddEffect(EFFECT_MOTIONBLUR);
+			CCamera::Get().SetFollowEntity(ent);
 		}
 	};
 
