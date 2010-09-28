@@ -20,51 +20,79 @@
 //	THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __CRAYTRACECALLBACK_H__
-#define __CRAYTRACECALLBACK_H__
+#ifndef __CKEYVALUES_H__
+#define __CKEYVALUES_H__
 
-struct TraceResult
-{
-	TraceResult()
-	{
-		entity = NULL;
-		fraction = -1.0f;
-	};
-
-	CBaseEntity *entity;
-	Vector pos;
-	Vector normal;
-	float fraction;
-};
-
-class CRayTraceCallback : public b2RayCastCallback
+class CKeyValues
 {
 public:
-	CRayTraceCallback(CBaseEntity *filter) : m_pFilter(filter)
+	CKeyValues(void)
 	{
 	};
-
-	virtual float32 ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float32 fraction)
+	
+	CKeyValues(const CKeyValues &other)
 	{
-		if(m_pFilter ==  static_cast<CBaseEntity *>(fixture->GetBody()->GetUserData()))
-			return -1.0f;
-
-		m_Result.entity = static_cast<CBaseEntity *>(fixture->GetBody()->GetUserData());
-		m_Result.pos = point;
-		m_Result.normal = normal;
-		m_Result.fraction = fraction;
-
-		return fraction;
+		m_KV = other.m_KV;
 	};
 
-	const TraceResult &GetResult(void)
+	void SetValue(const char *key, float value)
 	{
-		return m_Result;
+		char buffer[32] = {0};
+		sprintf_s(buffer, "%f", value);
+		m_KV[key] = buffer;
+	};
+
+	void SetValue(const char *key, int value)
+	{
+		char buffer[32] = {0};
+		sprintf_s(buffer, "%d", value);
+		m_KV[key] = buffer;
+	};
+
+	void SetValue(const char *key, std::string value)
+	{
+		m_KV[key] = value;
+	};
+
+	int GetInt(const char *key, int default_value)
+	{
+		std::map<std::string, std::string>::iterator itor = m_KV.find(key);
+		if(itor != m_KV.end())
+		{
+			int val = 0;
+			sscanf_s(m_KV[key].c_str(), "%d", &val);
+			return val;
+		}
+
+		return default_value;
+	};
+
+	float GetFloat(const char *key, float default_value)
+	{
+		std::map<std::string, std::string>::iterator itor = m_KV.find(key);
+		if(itor != m_KV.end())
+		{
+			float val = 0;
+			sscanf_s(m_KV[key].c_str(), "%f", &val);
+			return val;
+		}
+
+		return default_value;
+	};
+
+	std::string GetString(const char *key, std::string default_value)
+	{
+		std::map<std::string, std::string>::iterator itor = m_KV.find(key);
+		if(itor != m_KV.end())
+		{
+			return m_KV[key];
+		}
+
+		return default_value;
 	};
 
 private:
-	CBaseEntity *m_pFilter;
-	TraceResult m_Result;
+	std::map<std::string, std::string> m_KV;
 };
 
-#endif // __CRAYTRACECALLBACK_H__
+#endif // __CKEYVALUES_H__

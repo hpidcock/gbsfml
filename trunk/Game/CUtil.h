@@ -51,6 +51,12 @@ protected:
 		m_flCurrentTime += delta;
 	};
 
+	void Reset(void)
+	{
+		m_flDeltaTime = 0.0f;
+		m_flCurrentTime = 0.0f;
+	};
+
 private:
 	float m_flCurrentTime;
 	float m_flDeltaTime;

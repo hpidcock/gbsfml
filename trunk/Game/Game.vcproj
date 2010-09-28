@@ -61,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/IGNORE:4099"
 				AdditionalDependencies="sfml-audio-s-d.lib sfml-graphics-s-d.lib sfml-system-s-d.lib sfml-window-s-d.lib Box2D-d.lib FreeImage.lib Gwen-d.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\SFML\lib;..\Box2D\lib;..\GWEN\lib"
@@ -137,6 +138,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/IGNORE:4099"
 				AdditionalDependencies="sfml-audio-s.lib sfml-graphics-s.lib sfml-system-s.lib sfml-window-s.lib Box2D.lib FreeImage.lib Gwen.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\SFML\lib;..\Box2D\lib;..\GWEN\lib"
@@ -233,6 +235,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Game States"
+				>
+				<File
+					RelativePath=".\CGamePlay.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -246,6 +256,10 @@
 			<Filter
 				Name="Core"
 				>
+				<File
+					RelativePath=".\CKeyValues.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Color.h"
 					>
@@ -286,6 +300,10 @@
 			<Filter
 				Name="Game States"
 				>
+				<File
+					RelativePath=".\IBaseGameState.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Singleton Systems"
@@ -300,6 +318,10 @@
 				</File>
 				<File
 					RelativePath=".\CEntityRegister.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CGameStateRegister.h"
 					>
 				</File>
 				<File

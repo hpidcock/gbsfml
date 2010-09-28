@@ -67,6 +67,36 @@ public:
 		return b2Vec2(x, y);
 	};
 
+	inline bool operator<(const Vector &other) const
+	{
+		return x < other.x && y < other.y;
+	};
+
+	inline bool operator>(const Vector &other) const
+	{
+		return x > other.x && y > other.y;
+	};
+
+	inline bool operator<=(const Vector &other) const
+	{
+		return x <= other.x && y <= other.y;
+	};
+
+	inline bool operator>=(const Vector &other) const
+	{
+		return x >= other.x && y >= other.y;
+	};
+
+	inline bool operator==(const Vector &other) const
+	{
+		return Distance(other) <= 0.0001f;
+	};
+
+	inline bool operator!=(const Vector &other) const
+	{
+		return Distance(other) > 0.0001f;
+	};
+
 	inline Vector operator-(const Vector &other) const
 	{
 		return Vector(x - other.x, y - other.y);

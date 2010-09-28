@@ -40,6 +40,10 @@ public:
 	void Destroy(CBaseEntity *entity, int index);
 	bool IsValid(CBaseEntity *entity, int index, int uniqueIndex);
 
+	std::vector<CEntityHandle> FindByClassName(const char *classname);
+	std::vector<CEntityHandle> FindInCircle(const Vector &pos, float radius);
+	std::vector<CEntityHandle> FindInSquare(const Vector &min, const Vector &max);
+
 	void ThinkAll(void);
 	void DrawAll(void);
 

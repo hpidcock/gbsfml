@@ -26,6 +26,9 @@
 #ifndef __CENGINE_H__
 #define __CENGINE_H__
 
+class IBaseGameState;
+class CBaseEntity;
+
 class CEngine : public CSingleton<CEngine>
 {
 public:
@@ -33,10 +36,15 @@ public:
 	void Init(void);
 	void Run(void);
 
-	TraceResult RayTrace(Vector start, Vector end);
+	TraceResult RayTrace(Vector start, Vector end, CBaseEntity *filter = NULL);
 
 	sf::RenderWindow &GetRenderWindow(void);
 	b2World *GetPhysicsWorld(void);
+
+	IBaseGameState *GetGameState(void);
+
+	// THIS CAN ONLY BE CALLED IN PRE THINK
+	IBaseGameState *ChangeState(const char *name, const CKeyValues &values);
 
 protected:
 	void DrawParticles(void);
@@ -63,6 +71,9 @@ private:
 	b2World *m_pPhysicsWorld;
 
 	CCollisionCallback m_CollisionCallbacks;
+
+	IBaseGameState *m_pCurrentState;
+	std::map<std::string, IBaseGameState *> m_GameStates;
 };
 
 #endif // __CENGINE_H__
