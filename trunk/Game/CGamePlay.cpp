@@ -94,7 +94,7 @@ public:
 
 	virtual void DrawBackground(int plane)
 	{
-		sf::Shape s = sf::Shape::Circle(128 + 32 * plane, 128, 32, Color(255, 255, plane * 32, 255), 32.0f);
+		sf::Shape s = sf::Shape::Circle(128, 128, 32, Color(255, 255, plane * 32, 255), 16.0f);
 		CEngine::Get().GetRenderWindow().Draw(s);
 	};
 
