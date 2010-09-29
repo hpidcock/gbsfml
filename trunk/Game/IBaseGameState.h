@@ -26,7 +26,7 @@
 class CBaseHandle;
 class CKeyValues;
 
-class IBaseGameState
+class IBaseGameState : public Gwen::Event::Handler
 {
 public:
 	virtual ~IBaseGameState(void) { };

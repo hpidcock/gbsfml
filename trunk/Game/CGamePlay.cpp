@@ -24,6 +24,8 @@
 
 #include "CCamera.h"
 
+#include <Gwen/Controls/Button.h>
+
 class CGamePlay : public IBaseGameState
 {
 public:
@@ -42,6 +44,16 @@ public:
 	{
 	};
 
+	void OnButtonPressed(Gwen::Controls::Base *control)
+	{
+		CBaseEntity *ent = CEntityRegister::Get().CreateFromClassname("CTestEntity");
+		ent->Initialise();
+		ent->SetPos(Vector(128, 32));
+		ent->SetAngle(10);
+		ent->AddEffect(EFFECT_MOTIONBLUR);
+		CCamera::Get().SetFollowEntity(ent);
+	}
+
 	virtual void Open(IBaseGameState *previous, const CKeyValues &keyValues)
 	{
 		for(int i = 0; i < 16; i++)
@@ -56,6 +68,18 @@ public:
 		ent2->Initialise();
 		ent2->SetPos(Vector(0, 400));
 		ent2->SetAngle(20);
+
+
+
+		Gwen::Controls::Canvas *canvas = CEngine::Get().GetCanvas();
+
+		Gwen::Controls::Button *button = new Gwen::Controls::Button(canvas);
+
+		button->SetPos(32, 32);
+		button->SetSize(128, 32);
+		button->SetText("Spawn a Block");
+
+		button->onDown.Add(this, &CGamePlay::OnButtonPressed);
 	};
 
 	virtual void Close(IBaseGameState *next)

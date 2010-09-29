@@ -40,6 +40,7 @@ public:
 
 	sf::RenderWindow &GetRenderWindow(void);
 	b2World *GetPhysicsWorld(void);
+	Gwen::Controls::Canvas *GetCanvas(void);
 
 	IBaseGameState *GetGameState(void);
 
