@@ -163,6 +163,11 @@ void CEngine::HandleEvent(sf::Event &e)
 		m_pCanvas->InputMouseButton(e.MouseButton.Button, true);
 		m_pCurrentState->OnMouseEvent(e);
 		break;
+	case sf::Event::MouseEntered:
+	case sf::Event::MouseLeft:
+		m_pCanvas->InputMouseButton(0, false);
+		m_pCanvas->InputMouseButton(1, false);
+		break;
 	case sf::Event::MouseButtonReleased:
 		m_pCanvas->InputMouseButton(e.MouseButton.Button, false);
 		m_pCurrentState->OnMouseEvent(e);
@@ -320,4 +325,9 @@ sf::RenderWindow &CEngine::GetRenderWindow(void)
 b2World *CEngine::GetPhysicsWorld(void)
 {
 	return m_pPhysicsWorld;
+}
+
+Gwen::Controls::Canvas *CEngine::GetCanvas(void)
+{
+	return m_pCanvas;
 }
