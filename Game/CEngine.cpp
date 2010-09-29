@@ -131,6 +131,8 @@ IBaseGameState *CEngine::ChangeState(const char *name, const CKeyValues &values)
 	CSounds::Get().StopAllSounds();
 	CUtil::Get().Reset();
 
+	m_pCanvas->RemoveAllChildren();
+
 	m_pCurrentState->Open(lastState, values);
 
 	return m_pCurrentState;
@@ -186,12 +188,14 @@ void CEngine::DrawGUI(void)
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	// Setup the view port.
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, -1.0, 0.0);
 
 	glMatrixMode(GL_MODELVIEW);
-	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glLoadIdentity();
 
 	m_pCanvas->RenderCanvas();
 }
@@ -290,7 +294,7 @@ void CEngine::Run(void)
 		{
 			sf::View view = sf::View(sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
 			view.Move(cameraPos);
-			view.Zoom(cameraZoom - (i * 0.1));
+			view.Zoom(cameraZoom - (i * 0.05));
 			m_pRenderWindow->SetView(view);
 
 			m_pCurrentState->DrawBackground(i);

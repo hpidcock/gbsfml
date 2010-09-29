@@ -87,7 +87,7 @@ void CBaseEntity::Draw(void)
 		m_pDrawableObject->SetRotation(m_vBaseAngle);
 		m_pDrawableObject->SetColor(m_cDiffuseColour);
 		m_pDrawableObject->SetCenter(GetBounds() / 2);
-		
+
 		if(IsEffectSet(EFFECT_ADD))
 		{
 			m_pDrawableObject->SetBlendMode(sf::Blend::Add);
@@ -103,19 +103,22 @@ void CBaseEntity::Draw(void)
 
 		if(IsEffectSet(EFFECT_BLUR))
 		{
+			m_pDrawableObject->SetPosition(m_vBasePosition);
+			window.Draw(*m_pDrawableObject);
+
 			Color diffuse = m_cDiffuseColour;
-			diffuse.a = 255 / 10;
+			diffuse.a = 255 / 16;
 			m_pDrawableObject->SetColor(diffuse);
 
-			for(int x = -2; x <= 2; x++)
+			for(int x = -3; x <= 3; x++)
 			{
-				m_pDrawableObject->SetPosition(m_vBasePosition + Vector(x, 0));
+				m_pDrawableObject->SetPosition(m_vBasePosition + Vector(x * 3, 0));
 				window.Draw(*m_pDrawableObject);
 			}
 
-			for(int y = -2; y <= 2; y++)
+			for(int y = -3; y <= 3; y++)
 			{
-				m_pDrawableObject->SetPosition(m_vBasePosition + Vector(0, y));
+				m_pDrawableObject->SetPosition(m_vBasePosition + Vector(0, y * 3));
 				window.Draw(*m_pDrawableObject);
 			}
 		}
